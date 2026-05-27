@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes, viewport-fit=cover">
+    <title>职业探索活动报名</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #f5f7fb;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            padding: 16px 12px 40px;
+            color: #1f2d3d;
+        }
+        .container {
+            max-width: 640px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e6f9f, #2c7da0);
+            margin: -16px -12px 20px -12px;
+            padding: 28px 20px 24px;
+            color: white;
+            border-radius: 0 0 28px 28px;
+        }
+        .header h1 {
+            font-size: 1.8rem;
+            font-weight: 600;
+        }
+        .time-status {
+            background: rgba(255,255,255,0.2);
+            border-radius: 40px;
+            display: inline-block;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+        .group-section {
+            margin-bottom: 30px;
+        }
+        .group-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1e4a6e;
+            background: #eef2fa;
+            padding: 8px 16px;
+            border-radius: 30px;
+            margin: 16px 0 12px;
+            display: inline-block;
+        }
+        .company-card {
+            background: white;
+            border-radius: 24px;
+            margin-bottom: 16px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+            overflow: hidden;
+            border: 1px solid #eef2f6;
+        }
+        .company-card.active {
+            border-color: #2c7da0;
+        }
+        .card-header {
+            padding: 16px 18px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .company-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #0f3b5c;
+            line-height: 1.3;
+            flex: 1;
+        }
+        .stats {
+            background: #eef2fa;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 0.75rem;
+            white-space: nowrap;
+            margin-left: 10px;
+        }
+        .stats.full {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+        .intro-area, .form-area {
+            padding: 0 18px 12px;
+            border-top: 1px solid #edf2f7;
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+        .intro-text {
+            color: #4a5b6e;
+            line-height: 1.45;
+            margin-top: 12px;
+            font-size: 0.9rem;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: #2c5a7a;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #cbdde9;
+            border-radius: 16px;
+            font-size: 0.95rem;
+        }
+        input:focus {
+            outline: none;
+            border-color: #2c7da0;
+        }
+        .submit-btn {
+            background: #2c7da0;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 40px;
+            color: white;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-top: 8px;
+            cursor: pointer;
+        }
+        .submit-btn:disabled {
+            background: #b9cddf;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 12px;
+            padding: 10px;
+            border-radius: 14px;
+            font-size: 0.85rem;
+            display: none;
+        }
+        .success { background: #e0f2e9; color: #276749; }
+        .error { background: #ffe6e5; color: #c53030; }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            font-size: 0.7rem;
+            color: #8ba0b5;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>职业探索活动</h1>
+        <p>选择心仪企业 · 名额有限 报满即止</p>
+        <div class="time-status" id="timeStatus">加载中...</div>
+    </div>
+    <div id="companyList"></div>
+    <div class="footer">每人仅限报名一次（姓名+班级唯一），请如实填写</div>
+</div>
+
+<script>
+    const API_BASE = window.location.origin + '/api';
+    let companiesData = [];
+    let timeOpen = false;
+    let expandedId = null;
+    let submitting = false;
+
+    // 获取报名时间状态
+    async function fetchTimeStatus() {
+        try {
+            const res = await fetch(API_BASE + '/check_time');
+            const data = await res.json();
+            timeOpen = data.open;
+            const statusEl = document.getElementById('timeStatus');
+            if (data.open) {
+                statusEl.innerHTML = `✅ 报名进行中 ${data.start_time} 至 ${data.end_time}`;
+            } else {
+                statusEl.innerHTML = `⛔ 报名未开始或已结束 开放时间：${data.start_time} 至 ${data.end_time}`;
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('timeStatus').innerHTML = '⚠️ 无法获取报名时间';
+        }
+    }
+
+    // 获取企业列表
+    async function fetchCompanies() {
+        try {
+            const res = await fetch(API_BASE + '/companies');
+            const data = await res.json();
+            if (data.success) {
+                companiesData = data.companies;
+                renderCompanies();
+            } else {
+                document.getElementById('companyList').innerHTML = '<div class="loading">加载企业失败</div>';
+            }
+        } catch (err) {
+            console.error(err);
+            document.getElementById('companyList').innerHTML = '<div class="loading">网络错误，请刷新页面</div>';
+        }
+    }
+
+    // 分组渲染
+    function renderCompanies() {
+        const container = document.getElementById('companyList');
+        if (!companiesData.length) {
+            container.innerHTML = '<div class="loading">暂无企业数据</div>';
+            return;
+        }
+        // 按 category 分组
+        const groupMap = new Map();
+        companiesData.forEach(comp => {
+            const cat = comp.category || '其他';
+            if (!groupMap.has(cat)) groupMap.set(cat, []);
+            groupMap.get(cat).push(comp);
+        });
+        let html = '';
+        for (let [cat, comps] of groupMap.entries()) {
+            html += `<div class="group-section"><div class="group-title">${escapeHtml(cat)}</div>`;
+            for (let comp of comps) {
+                const isFull = comp.is_full;
+                const remaining = comp.capacity - comp.registered;
+                const statsText = isFull ? '已满员' : `剩余 ${remaining}/${comp.capacity}`;
+                const statsClass = isFull ? 'stats full' : 'stats';
+                const expanded = (expandedId === comp.id);
+                html += `
+                    <div class="company-card ${expanded ? 'active' : ''}" data-id="${comp.id}">
+                        <div class="card-header" onclick="toggleCard(${comp.id})">
+                            <span class="company-name">🏢 ${escapeHtml(comp.name)}</span>
+                            <span class="${statsClass}">${statsText}</span>
+                        </div>
+                        <div class="intro-area ${expanded ? 'show' : ''}" id="intro-${comp.id}">
+                            <div class="intro-text">${escapeHtml(comp.description)}</div>
+                        </div>
+                        <div class="form-area ${expanded ? 'show' : ''}" id="form-${comp.id}">
+                            <div class="form-group">
+                                <label>学生姓名</label>
+                                <input type="text" id="name-${comp.id}" placeholder="真实姓名" autocomplete="off">
+                            </div>
+                            <div class="form-group">
+                                <label>班级</label>
+                                <input type="text" id="class-${comp.id}" placeholder="例：高二(1)班" autocomplete="off">
+                            </div>
+                            <button class="submit-btn" id="btn-${comp.id}" onclick="submitRegistration(${comp.id})" ${isFull || !timeOpen ? 'disabled' : ''}>
+                                ${isFull ? '名额已满' : (timeOpen ? '立即报名' : '未开放')}
+                            </button>
+                            <div id="msg-${comp.id}" class="message"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            html += `</div>`;
+        }
+        container.innerHTML = html;
+    }
+
+    window.toggleCard = function(id) {
+        if (expandedId === id) {
+            document.getElementById(`intro-${id}`).classList.remove('show');
+            document.getElementById(`form-${id}`).classList.remove('show');
+            document.querySelector(`.company-card[data-id="${id}"]`).classList.remove('active');
+            expandedId = null;
+        } else {
+            if (expandedId !== null) {
+                document.getElementById(`intro-${expandedId}`).classList.remove('show');
+                document.getElementById(`form-${expandedId}`).classList.remove('show');
+                document.querySelector(`.company-card[data-id="${expandedId}"]`).classList.remove('active');
+            }
+            document.getElementById(`intro-${id}`).classList.add('show');
+            document.getElementById(`form-${id}`).classList.add('show');
+            document.querySelector(`.company-card[data-id="${id}"]`).classList.add('active');
+            expandedId = id;
+        }
+    };
+
+    window.submitRegistration = async function(id) {
+        if (submitting) return;
+        const company = companiesData.find(c => c.id === id);
+        if (!company || company.is_full) {
+            showMsg(id, '该企业已满员', 'error');
+            return;
+        }
+        if (!timeOpen) {
+            showMsg(id, '当前不在报名时间内', 'error');
+            return;
+        }
+        const studentName = document.getElementById(`name-${id}`).value.trim();
+        const className = document.getElementById(`class-${id}`).value.trim();
+        if (!studentName || !className) {
+            showMsg(id, '请填写姓名和班级', 'error');
+            return;
+        }
+
+        submitting = true;
+        const btn = document.getElementById(`btn-${id}`);
+        btn.disabled = true;
+        btn.innerText = '提交中...';
+
+        try {
+            const res = await fetch(API_BASE + '/register', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    student_name: studentName,
+                    class_name: className,
+                    company_id: id
+                })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg(id, '报名成功！', 'success');
+                document.getElementById(`name-${id}`).value = '';
+                document.getElementById(`class-${id}`).value = '';
+                // 刷新企业列表更新剩余名额
+                await fetchCompanies();
+            } else {
+                showMsg(id, data.error || '报名失败', 'error');
+                if (data.error && data.error.includes('名额已满')) {
+                    await fetchCompanies();
+                }
+            }
+        } catch (err) {
+            showMsg(id, '网络错误，请重试', 'error');
+        } finally {
+            submitting = false;
+            btn.disabled = false;
+            if (company.is_full) btn.innerText = '名额已满';
+            else if (timeOpen) btn.innerText = '立即报名';
+            else btn.innerText = '未开放';
+        }
+    };
+
+    function showMsg(companyId, msg, type) {
+        const msgDiv = document.getElementById(`msg-${companyId}`);
+        if (!msgDiv) return;
+        msgDiv.textContent = msg;
+        msgDiv.className = `message ${type}`;
+        msgDiv.style.display = 'block';
+        setTimeout(() => {
+            msgDiv.style.display = 'none';
+        }, 3000);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    async function init() {
+        await fetchTimeStatus();
+        await fetchCompanies();
+    }
+    init();
+</script>
+</body>
+</html>
