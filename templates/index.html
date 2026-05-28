@@ -4,162 +4,201 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>职业探索活动报名</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-        body {
-            background-color: #f5f7fb;
-            font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            padding: 16px 12px 40px;
-            color: #1f2d3d;
-        }
-        .container {
-            max-width: 640px;
-            margin: 0 auto;
-        }
-        .header {
-            background: linear-gradient(135deg, #1e6f9f, #2c7da0);
-            margin: -16px -12px 20px -12px;
-            padding: 28px 20px 24px;
-            color: white;
-            border-radius: 0 0 28px 28px;
-        }
-        .header h1 {
-            font-size: 1.8rem;
-            font-weight: 600;
-        }
-        .time-status {
-            background: rgba(255,255,255,0.2);
-            border-radius: 40px;
-            display: inline-block;
-            padding: 6px 14px;
-            font-size: 0.8rem;
-            margin-top: 12px;
-        }
-        .group-section {
-            margin-bottom: 30px;
-        }
-        .group-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1e4a6e;
-            background: #eef2fa;
-            padding: 8px 16px;
-            border-radius: 30px;
-            margin: 16px 0 12px;
-            display: inline-block;
-        }
-        .company-card {
-            background: white;
-            border-radius: 24px;
-            margin-bottom: 16px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            overflow: hidden;
-            border: 1px solid #eef2f6;
-            transition: 0.2s;
-        }
-        .company-card.active {
-            border-color: #2c7da0;
-        }
-        .card-header {
-            padding: 16px 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-        }
-        .company-name {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #0f3b5c;
-            line-height: 1.3;
-            flex: 1;
-        }
-        .stats {
-            background: #eef2fa;
-            padding: 4px 12px;
-            border-radius: 30px;
-            font-size: 0.75rem;
-            white-space: nowrap;
-            margin-left: 10px;
-        }
-        .stats.full {
-            background: #fee2e2;
-            color: #b91c1c;
-        }
-        .intro-area, .form-area {
-            padding: 0 18px 12px;
-            border-top: 1px solid #edf2f7;
-            display: none;
-        }
-        .show {
-            display: block;
-        }
-        .intro-text {
-            color: #4a5b6e;
-            line-height: 1.45;
-            margin-top: 12px;
-            font-size: 0.9rem;
-        }
-        .form-group {
-            margin-bottom: 14px;
-        }
-        label {
-            font-size: 0.85rem;
-            font-weight: 500;
-            color: #2c5a7a;
-            display: block;
-            margin-bottom: 6px;
-        }
-        input {
-            width: 100%;
-            padding: 12px 14px;
-            border: 1px solid #cbdde9;
-            border-radius: 16px;
-            font-size: 0.95rem;
-        }
-        input:focus {
-            outline: none;
-            border-color: #2c7da0;
-        }
-        .submit-btn {
-            background: #2c7da0;
-            width: 100%;
-            border: none;
-            padding: 14px;
-            border-radius: 40px;
-            color: white;
-            font-weight: 600;
-            font-size: 1rem;
-            margin-top: 8px;
-            cursor: pointer;
-        }
-        .submit-btn:disabled {
-            background: #b9cddf;
-            cursor: not-allowed;
-        }
-        .message {
-            margin-top: 12px;
-            padding: 10px;
-            border-radius: 14px;
-            font-size: 0.85rem;
-            display: none;
-        }
-        .success { background: #e0f2e9; color: #276749; }
-        .error { background: #ffe6e5; color: #c53030; }
-        .footer {
-            text-align: center;
-            margin-top: 30px;
-            font-size: 0.7rem;
-            color: #8ba0b5;
-        }
-        .loading {
-            text-align: center;
-            padding: 40px;
-        }
+   <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    body {
+        background-color: #F8FAFC;
+        font-family: system-ui, -apple-system, sans-serif;
+        padding: 16px 12px 40px;
+        color: #334155;
+        -webkit-font-smoothing: antialiased;
+    }
+    .container {
+        max-width: 600px;
+        margin: 0 auto;
+    }
+    .header {
+        background: linear-gradient(135deg, #2A5A8F, #377FC4);
+        margin: -16px -12px 24px -12px;
+        padding: 32px 24px 28px;
+        color: white;
+        border-radius: 0 0 24px 24px;
+    }
+    .header h1 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        letter-spacing: -0.5px;
+    }
+    .header p {
+        font-size: 0.85rem;
+        opacity: 0.9;
+        margin-top: 6px;
+        line-height: 1.4;
+    }
+    .time-status {
+        background: rgba(255, 255, 255, 0.15);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(4px);
+        border-radius: 10px;
+        display: inline-block;
+        padding: 6px 12px;
+        font-size: 0.75rem;
+        margin-top: 14px;
+    }
+    .group-section {
+        margin-bottom: 24px;
+    }
+    .group-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #377FC4;
+        background: rgba(55, 127, 196, 0.08);
+        padding: 6px 12px;
+        border-radius: 10px;
+        margin: 16px 0 12px;
+        display: inline-block;
+    }
+    .company-card {
+        background: white;
+        border-radius: 16px;
+        margin-bottom: 12px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        overflow: hidden;
+        border: 1px solid #E2E8F0;
+        transition: all 0.2s ease;
+    }
+    .company-card.active {
+        border-color: #377FC4;
+        box-shadow: 0 4px 12px rgba(55, 127, 196, 0.06);
+    }
+    .card-header {
+        padding: 18px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        cursor: pointer;
+    }
+    .company-name {
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #1E293B;
+        line-height: 1.4;
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+    .company-dot {
+        display: inline-block;
+        width: 6px;
+        height: 6px;
+        background-color: #377FC4;
+        border-radius: 50%;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
+    .stats {
+        background: #F1F5F9;
+        color: #64748B;
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 0.75rem;
+        font-weight: 500;
+        white-space: nowrap;
+        margin-left: 12px;
+    }
+    .stats.full {
+        background: #FEE2E2;
+        color: #EF4444;
+    }
+    .intro-area, .form-area {
+        padding: 0 20px 16px;
+        border-top: 1px solid #F1F5F9;
+        display: none;
+    }
+    .show {
+        display: block;
+    }
+    .intro-text {
+        color: #475569;
+        line-height: 1.5;
+        margin-top: 14px;
+        font-size: 0.9rem;
+    }
+    .form-area {
+        border-top: none;
+        padding-top: 0;
+    }
+    .form-group {
+        margin-bottom: 14px;
+    }
+    label {
+        font-size: 0.8rem;
+        font-weight: 500;
+        color: #64748B;
+        display: block;
+        margin-bottom: 6px;
+    }
+    input {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1px solid #E2E8F0;
+        border-radius: 12px;
+        font-size: 0.95rem;
+        background-color: #F8FAFC;
+        transition: all 0.2s ease;
+    }
+    input:focus {
+        outline: none;
+        border-color: #377FC4;
+        background-color: #FFFFFF;
+        box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.1);
+    }
+    .submit-btn {
+        background: #377FC4;
+        width: 100%;
+        border: none;
+        padding: 14px;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        font-size: 0.95rem;
+        margin-top: 8px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+    }
+    .submit-btn:hover {
+        background: #2D6AA5;
+    }
+    .submit-btn:disabled {
+        background: #E2E8F0;
+        color: #A0AEC0;
+        cursor: not-allowed;
+    }
+    .message {
+        margin-top: 12px;
+        padding: 12px;
+        border-radius: 12px;
+        font-size: 0.85rem;
+        display: none;
+        font-weight: 500;
+    }
+    .success { background: #DCFCE7; color: #166534; }
+    .error { background: #FEE2E2; color: #991B1B; }
+    .footer {
+        text-align: center;
+        margin-top: 40px;
+        font-size: 0.75rem;
+        color: #94A3B8;
+    }
+    .loading {
+        text-align: center;
+        padding: 40px;
+        color: #64748B;
+    }
     </style>
 </head>
 <body>
@@ -212,7 +251,26 @@
             document.getElementById('companyList').innerHTML = '<div class="loading">网络错误，请刷新页面</div>';
         }
     }
-
+function getCategoryIcon(category) {
+    // 根据你 app.py 里的分类进行映射，为不同分类赋予不同的 CSS 类名
+    let iconClass = 'dot-default';
+    
+    if (!category) return `<span class="company-dot ${iconClass}"></span>`;
+    
+    if (category.includes('金融') || category.includes('财会')) {
+        iconClass = 'dot-finance';
+    } else if (category.includes('信息') || category.includes('技术') || category.includes('智能') || category.includes('科技')) {
+        iconClass = 'dot-tech';
+    } else if (category.includes('制造') || category.includes('工程') || category.includes('机械') || category.includes('能源')) {
+        iconClass = 'dot-engineering';
+    } else if (category.includes('生物') || category.includes('医药') || category.includes('健康')) {
+        iconClass = 'dot-bio';
+    } else if (category.includes('行政') || category.includes('管理') || category.includes('服务')) {
+        iconClass = 'dot-service';
+    }
+    
+    return `<span class="company-dot ${iconClass}"></span>`;
+}
     function renderCompanies() {
         const container = document.getElementById('companyList');
         if (!companiesData.length) {
@@ -237,7 +295,10 @@
                 html += `
                     <div class="company-card ${expanded ? 'active' : ''}" data-id="${comp.id}">
                         <div class="card-header" onclick="toggleCard(${comp.id})">
-                            <span class="company-name">🏢 ${escapeHtml(comp.name)}</span>
+                            <span class="company-name">
+    ${getCategoryIcon(comp.category)}
+    ${escapeHtml(comp.name)}
+</span>
                             <span class="${statsClass}">${statsText}</span>
                         </div>
                         <div class="intro-area ${expanded ? 'show' : ''}" id="intro-${comp.id}">
@@ -369,6 +430,46 @@
         await fetchCompanies();
     }
     init();
+    /* 基础圆点样式 */
+.company-dot {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 12px;
+    vertical-align: middle;
+    flex-shrink: 0;
+}
+
+/* 金融财会 - 稳重的金色/琥珀色 */
+.dot-finance {
+    background-color: #D97706;
+    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+}
+
+/* 信息技术/智能科技 - 科技蓝 */
+.dot-tech {
+    background-color: #377FC4;
+    box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.15);
+}
+
+/* 智能制造/工程机械/能源 - 工业青/深绿 */
+.dot-engineering {
+    background-color: #0D9488;
+    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+}
+
+/* 生物医药 - 生命绿 */
+.dot-bio {
+    background-color: #16A34A;
+    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+}
+
+/* 综合行政/默认 - 优雅灰蓝 */
+.dot-service, .dot-default {
+    background-color: #64748B;
+    box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
+}
 </script>
 </body>
 </html>
