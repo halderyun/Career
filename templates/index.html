@@ -91,15 +91,46 @@
         display: flex;
         align-items: center;
     }
+
+    /* ===================================================
+       ✨ 新增：不同行业的多彩极简圆点核心样式（完美替代 🏢）
+       =================================================== */
     .company-dot {
         display: inline-block;
-        width: 6px;
-        height: 6px;
-        background-color: #377FC4;
+        width: 8px;
+        height: 8px;
         border-radius: 50%;
-        margin-right: 10px;
+        margin-right: 12px;
+        vertical-align: middle;
         flex-shrink: 0;
     }
+    /* 金融财会 - 稳重的金色/琥珀色 */
+    .dot-finance {
+        background-color: #D97706;
+        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
+    }
+    /* 信息技术/智能科技 - 科技蓝 */
+    .dot-tech {
+        background-color: #377FC4;
+        box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.15);
+    }
+    /* 智能制造/工程机械/能源 - 工业青/深绿 */
+    .dot-engineering {
+        background-color: #0D9488;
+        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
+    }
+    /* 生物医药 - 生命绿 */
+    .dot-bio {
+        background-color: #16A34A;
+        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
+    }
+    /* 综合行政/默认 - 优雅灰蓝 */
+    .dot-service, .dot-default {
+        background-color: #64748B;
+        box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
+    }
+    /* =================================================== */
+
     .stats {
         background: #F1F5F9;
         color: #64748B;
@@ -199,7 +230,7 @@
         padding: 40px;
         color: #64748B;
     }
-    </style>
+</style>
 </head>
 <body>
 <div class="container">
