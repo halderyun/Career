@@ -129,6 +129,11 @@
         background-color: #64748B;
         box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
     }
+       /* 人文教育 - 知性优雅紫（新加的） */
+    .dot-education {
+        background-color: #7C3AED;
+        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
+    }
     /* =================================================== */
 
     .stats {
@@ -252,21 +257,23 @@
 
     // === 1. 新增：根据分类动态返回不同的极简圆点 ===
     function getCategoryIcon(category) {
-        if (!category) return '<span class="company-dot dot-default"></span>';
-        
-        let iconClass = 'dot-default';
-        if (category.includes('金融') || category.includes('财会')) {
-            iconClass = 'dot-finance';
-        } else if (category.includes('技术') || category.includes('科技') || category.includes('科创')) {
-            iconClass = 'dot-tech';
-        } else if (category.includes('制造') || category.includes('工程') || category.includes('机械')) {
-            iconClass = 'dot-engineering';
-        } else if (category.includes('生物') || category.includes('医药')) {
-            iconClass = 'dot-bio';
-        }
-        
-        return `<span class="company-dot ${iconClass}"></span>`;
+    if (!category) return '<span class="company-dot dot-default"></span>';
+    
+    let iconClass = 'dot-default';
+    if (category.includes('金融') || category.includes('财会')) {
+        iconClass = 'dot-finance';
+    } else if (category.includes('技术') || category.includes('科技') || category.includes('科创')) {
+        iconClass = 'dot-tech';
+    } else if (category.includes('制造') || category.includes('工程') || category.includes('机械')) {
+        iconClass = 'dot-engineering';
+    } else if (category.includes('生物') || category.includes('医药')) {
+        iconClass = 'dot-bio';
+    } else if (category.includes('教育') || category.includes('人文')) { // ✨ 新增：人文教育类判断
+        iconClass = 'dot-education';
     }
+    
+    return `<span class="company-dot ${iconClass}"></span>`;
+}
 
     // === 2. 原有逻辑：获取时间状态 ===
     async function fetchTimeStatus() {
