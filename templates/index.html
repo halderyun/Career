@@ -219,6 +219,25 @@
     let expandedId = null;
     let submitting = false;
 
+    // === 1. 新增：根据分类动态返回不同的极简圆点 ===
+    function getCategoryIcon(category) {
+        if (!category) return '<span class="company-dot dot-default"></span>';
+        
+        let iconClass = 'dot-default';
+        if (category.includes('金融') || category.includes('财会')) {
+            iconClass = 'dot-finance';
+        } else if (category.includes('技术') || category.includes('科技') || category.includes('科创')) {
+            iconClass = 'dot-tech';
+        } else if (category.includes('制造') || category.includes('工程') || category.includes('机械')) {
+            iconClass = 'dot-engineering';
+        } else if (category.includes('生物') || category.includes('医药')) {
+            iconClass = 'dot-bio';
+        }
+        
+        return `<span class="company-dot ${iconClass}"></span>`;
+    }
+
+    // === 2. 原有逻辑：获取时间状态 ===
     async function fetchTimeStatus() {
         try {
             const res = await fetch(API_BASE + '/check_time');
@@ -236,6 +255,7 @@
         }
     }
 
+    // === 3. 原有逻辑：获取企业列表数据 ===
     async function fetchCompanies() {
         try {
             const res = await fetch(API_BASE + '/companies');
@@ -251,26 +271,8 @@
             document.getElementById('companyList').innerHTML = '<div class="loading">网络错误，请刷新页面</div>';
         }
     }
-function getCategoryIcon(category) {
-    // 根据你 app.py 里的分类进行映射，为不同分类赋予不同的 CSS 类名
-    let iconClass = 'dot-default';
-    
-    if (!category) return `<span class="company-dot ${iconClass}"></span>`;
-    
-    if (category.includes('金融') || category.includes('财会')) {
-        iconClass = 'dot-finance';
-    } else if (category.includes('信息') || category.includes('技术') || category.includes('智能') || category.includes('科技')) {
-        iconClass = 'dot-tech';
-    } else if (category.includes('制造') || category.includes('工程') || category.includes('机械') || category.includes('能源')) {
-        iconClass = 'dot-engineering';
-    } else if (category.includes('生物') || category.includes('医药') || category.includes('健康')) {
-        iconClass = 'dot-bio';
-    } else if (category.includes('行政') || category.includes('管理') || category.includes('服务')) {
-        iconClass = 'dot-service';
-    }
-    
-    return `<span class="company-dot ${iconClass}"></span>`;
-}
+
+    // === 4. 核心渲染逻辑（已替换 🏢 图标为动态函数） ===
     function renderCompanies() {
         const container = document.getElementById('companyList');
         if (!companiesData.length) {
@@ -292,13 +294,12 @@ function getCategoryIcon(category) {
                 const statsText = isFull ? '已满员' : `剩余 ${remaining}/${comp.capacity}`;
                 const statsClass = isFull ? 'stats full' : 'stats';
                 const expanded = (expandedId === comp.id);
+                
+                // 这里已经完美替换了原有的 🏢 图标
                 html += `
                     <div class="company-card ${expanded ? 'active' : ''}" data-id="${comp.id}">
                         <div class="card-header" onclick="toggleCard(${comp.id})">
-                            <span class="company-name">
-    ${getCategoryIcon(comp.category)}
-    ${escapeHtml(comp.name)}
-</span>
+                            <span class="company-name">${getCategoryIcon(comp.category)}${escapeHtml(comp.name)}</span>
                             <span class="${statsClass}">${statsText}</span>
                         </div>
                         <div class="intro-area ${expanded ? 'show' : ''}" id="intro-${comp.id}">
@@ -326,6 +327,7 @@ function getCategoryIcon(category) {
         container.innerHTML = html;
     }
 
+    // === 5. 原有逻辑：折叠面板控制 ===
     window.toggleCard = function(id) {
         if (expandedId === id) {
             document.getElementById(`intro-${id}`).classList.remove('show');
@@ -348,6 +350,7 @@ function getCategoryIcon(category) {
         }
     };
 
+    // === 6. 原有逻辑：提交表单 ===
     window.submitRegistration = async function(id) {
         if (submitting) return;
         const company = companiesData.find(c => c.id === id);
@@ -386,7 +389,7 @@ function getCategoryIcon(category) {
                 showMsg(id, '报名成功！', 'success');
                 document.getElementById(`name-${id}`).value = '';
                 document.getElementById(`class-${id}`).value = '';
-                await fetchCompanies(); // 刷新剩余名额
+                await fetchCompanies();
             } else {
                 showMsg(id, data.error || '报名失败', 'error');
                 if (data.error && data.error.includes('满')) {
@@ -404,6 +407,7 @@ function getCategoryIcon(category) {
         }
     };
 
+    // === 7. 原有逻辑：辅助工具函数 ===
     function showMsg(companyId, msg, type) {
         const msgDiv = document.getElementById(`msg-${companyId}`);
         if (!msgDiv) return;
@@ -430,46 +434,5 @@ function getCategoryIcon(category) {
         await fetchCompanies();
     }
     init();
-    /* 基础圆点样式 */
-.company-dot {
-    display: inline-block;
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    margin-right: 12px;
-    vertical-align: middle;
-    flex-shrink: 0;
-}
-
-/* 金融财会 - 稳重的金色/琥珀色 */
-.dot-finance {
-    background-color: #D97706;
-    box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
-}
-
-/* 信息技术/智能科技 - 科技蓝 */
-.dot-tech {
-    background-color: #377FC4;
-    box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.15);
-}
-
-/* 智能制造/工程机械/能源 - 工业青/深绿 */
-.dot-engineering {
-    background-color: #0D9488;
-    box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-}
-
-/* 生物医药 - 生命绿 */
-.dot-bio {
-    background-color: #16A34A;
-    box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
-}
-
-/* 综合行政/默认 - 优雅灰蓝 */
-.dot-service, .dot-default {
-    background-color: #64748B;
-    box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
-}
 </script>
-</body>
 </html>
