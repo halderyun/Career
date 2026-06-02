@@ -13,7 +13,7 @@ CORS(app)
 DB_PATH = '/tmp/career.db'  # Render 可写目录
 
 def init_db():
-    with sqlite3.connect(DB_PATH) as conn:
+    with sqlite3.connect(DB_PATH, timeout=20.0) as conn:
         conn.execute('''
             CREATE TABLE IF NOT EXISTS companies (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -83,7 +83,7 @@ def check_time():
 
 @app.route('/api/companies')
 def companies():
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=20.0)
     conn.row_factory = sqlite3.Row
     cur = conn.cursor()
     cur.execute('''
@@ -120,7 +120,7 @@ def register():
     if not name or not cls or not cid:
         return jsonify({'success': False, 'error': '请填写完整'}), 400
     ip = get_ip()
-    conn = sqlite3.connect(DB_PATH)
+    conn = sqlite3.connect(DB_PATH, timeout=20.0)
     cur = conn.cursor()
     try:
         cur.execute("SELECT capacity FROM companies WHERE id=?", (cid,))
