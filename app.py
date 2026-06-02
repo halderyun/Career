@@ -32,7 +32,7 @@ def init_db():
                 ip_address TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 FOREIGN KEY(company_id) REFERENCES companies(id),
-                UNIQUE(student_name, class_name)
+                UNIQUE(student_name)
             )
         ''')
         cur = conn.execute("SELECT COUNT(*) FROM companies")
@@ -58,7 +58,7 @@ def init_db():
 init_db()
 
 CHINA_TZ = pytz.timezone('Asia/Shanghai')
-START_TIME = datetime(2026, 6, 2, 13, 51, 0)
+START_TIME = datetime(2026, 6, 3, 7, 45, 0)
 END_TIME   = datetime(2026, 6, 3, 23, 59, 59)
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin5525')
 
@@ -136,7 +136,7 @@ def register():
         conn.commit()
         return jsonify({'success': True, 'message': '报名成功'})
     except sqlite3.IntegrityError:
-        return jsonify({'success': False, 'error': '您已经报名过了'}), 409
+        return jsonify({'success': False, 'error': '已经报名,请勿重复'}), 409
     except Exception as e:
         conn.rollback()
         print(e)
