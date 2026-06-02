@@ -4,248 +4,341 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>职业探索活动报名</title>
-   <style>
-    * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-    }
-    body {
-        background-color: #F8FAFC;
-        font-family: system-ui, -apple-system, sans-serif;
-        padding: 16px 12px 40px;
-        color: #334155;
-        -webkit-font-smoothing: antialiased;
-    }
-    .container {
-        max-width: 600px;
-        margin: 0 auto;
-    }
-    .header {
-        background: linear-gradient(135deg, #2A5A8F, #377FC4);
-        margin: -16px -12px 24px -12px;
-        padding: 32px 24px 28px;
-        color: white;
-        border-radius: 0 0 24px 24px;
-    }
-    .header h1 {
-        font-size: 1.6rem;
-        font-weight: 600;
-        letter-spacing: -0.5px;
-    }
-    .header p {
-        font-size: 0.85rem;
-        opacity: 0.9;
-        margin-top: 6px;
-        line-height: 1.4;
-    }
-    .time-status {
-        background: rgba(255, 255, 255, 0.15);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        backdrop-filter: blur(4px);
-        border-radius: 10px;
-        display: inline-block;
-        padding: 6px 12px;
-        font-size: 0.75rem;
-        margin-top: 14px;
-    }
-    .group-section {
-        margin-bottom: 24px;
-    }
-    .group-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #377FC4;
-        background: rgba(55, 127, 196, 0.08);
-        padding: 6px 12px;
-        border-radius: 10px;
-        margin: 16px 0 12px;
-        display: inline-block;
-    }
-    .company-card {
-        background: white;
-        border-radius: 16px;
-        margin-bottom: 12px;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.02);
-        overflow: hidden;
-        border: 1px solid #E2E8F0;
-        transition: all 0.2s ease;
-    }
-    .company-card.active {
-        border-color: #377FC4;
-        box-shadow: 0 4px 12px rgba(55, 127, 196, 0.06);
-    }
-    .card-header {
-        padding: 18px 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        cursor: pointer;
-    }
-    .company-name {
-        font-size: 1.05rem;
-        font-weight: 600;
-        color: #1E293B;
-        line-height: 1.4;
-        flex: 1;
-        display: flex;
-        align-items: center;
-    }
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            background-color: #F8FAFC;
+            font-family: system-ui, -apple-system, sans-serif;
+            padding: 16px 12px 40px;
+            color: #334155;
+            -webkit-font-smoothing: antialiased;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .header {
+            background: linear-gradient(135deg, #2A5A8F, #377FC4);
+            margin: -16px -12px 24px -12px;
+            padding: 32px 24px 28px;
+            color: white;
+            border-radius: 0 0 24px 24px;
+            position: relative;
+        }
+        .header h1 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+            margin-top: 6px;
+            line-height: 1.4;
+        }
+        
+        /* 顶部操作区：倒计时与刷新按钮 */
+        .header-tools {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-top: 16px;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .time-status {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(4px);
+            border-radius: 10px;
+            padding: 6px 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+        .refresh-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 6px 14px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        .refresh-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        .refresh-btn:active {
+            transform: scale(0.95);
+        }
 
-    /* ===================================================
-       ✨ 新增：不同行业的多彩极简圆点核心样式（完美替代 🏢）
-       =================================================== */
-    .company-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        border-radius: 50%;
-        margin-right: 12px;
-        vertical-align: middle;
-        flex-shrink: 0;
-    }
-    /* 金融财会 - 稳重的金色/琥珀色 */
-    .dot-finance {
-        background-color: #D97706;
-        box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15);
-    }
-    /* 信息技术/智能科技 - 科技蓝 */
-    .dot-tech {
-        background-color: #377FC4;
-        box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.15);
-    }
-    /* 智能制造/工程机械/能源 - 工业青/深绿 */
-    .dot-engineering {
-        background-color: #0D9488;
-        box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15);
-    }
-    /* 生物医药 - 生命绿 */
-    .dot-bio {
-        background-color: #16A34A;
-        box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15);
-    }
-    /* 综合行政/默认 - 优雅灰蓝 */
-    .dot-service, .dot-default {
-        background-color: #64748B;
-        box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15);
-    }
-       /* 人文教育 - 知性优雅紫（新加的） */
-    .dot-education {
-        background-color: #7C3AED;
-        box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15);
-    }
-    /* =================================================== */
+        .group-section {
+            margin-bottom: 24px;
+        }
+        .group-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #377FC4;
+            background: rgba(55, 127, 196, 0.08);
+            padding: 6px 12px;
+            border-radius: 10px;
+            margin: 16px 0 12px;
+            display: inline-block;
+        }
+        .company-card {
+            background: white;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+            overflow: hidden;
+            border: 1px solid #E2E8F0;
+            transition: all 0.2s ease;
+        }
+        .company-card.active {
+            border-color: #377FC4;
+            box-shadow: 0 4px 12px rgba(55, 127, 196, 0.06);
+        }
+        .card-header {
+            padding: 18px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+        }
+        .company-name {
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1E293B;
+            line-height: 1.4;
+            flex: 1;
+            display: flex;
+            align-items: center;
+        }
 
-    .stats {
-        background: #F1F5F9;
-        color: #64748B;
-        padding: 4px 10px;
-        border-radius: 8px;
-        font-size: 0.75rem;
-        font-weight: 500;
-        white-space: nowrap;
-        margin-left: 12px;
-    }
-    .stats.full {
-        background: #FEE2E2;
-        color: #EF4444;
-    }
-    .intro-area, .form-area {
-        padding: 0 20px 16px;
-        border-top: 1px solid #F1F5F9;
-        display: none;
-    }
-    .show {
-        display: block;
-    }
-    .intro-text {
-        color: #475569;
-        line-height: 1.5;
-        margin-top: 14px;
-        font-size: 0.9rem;
-    }
-    .form-area {
-        border-top: none;
-        padding-top: 0;
-    }
-    .form-group {
-        margin-bottom: 14px;
-    }
-    label {
-        font-size: 0.8rem;
-        font-weight: 500;
-        color: #64748B;
-        display: block;
-        margin-bottom: 6px;
-    }
-    input {
-        width: 100%;
-        padding: 12px 14px;
-        border: 1px solid #E2E8F0;
-        border-radius: 12px;
-        font-size: 0.95rem;
-        background-color: #F8FAFC;
-        transition: all 0.2s ease;
-    }
-    input:focus {
-        outline: none;
-        border-color: #377FC4;
-        background-color: #FFFFFF;
-        box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.1);
-    }
-    .submit-btn {
-        background: #377FC4;
-        width: 100%;
-        border: none;
-        padding: 14px;
-        border-radius: 12px;
-        color: white;
-        font-weight: 600;
-        font-size: 0.95rem;
-        margin-top: 8px;
-        cursor: pointer;
-        transition: background 0.2s ease;
-    }
-    .submit-btn:hover {
-        background: #2D6AA5;
-    }
-    .submit-btn:disabled {
-        background: #E2E8F0;
-        color: #A0AEC0;
-        cursor: not-allowed;
-    }
-    .message {
-        margin-top: 12px;
-        padding: 12px;
-        border-radius: 12px;
-        font-size: 0.85rem;
-        display: none;
-        font-weight: 500;
-    }
-    .success { background: #DCFCE7; color: #166534; }
-    .error { background: #FEE2E2; color: #991B1B; }
-    .footer {
-        text-align: center;
-        margin-top: 40px;
-        font-size: 0.75rem;
-        color: #94A3B8;
-    }
-    .loading {
-        text-align: center;
-        padding: 40px;
-        color: #64748B;
-    }
-</style>
+        /* 行业多彩圆点核心样式 */
+        .company-dot {
+            display: inline-block;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-right: 12px;
+            vertical-align: middle;
+            flex-shrink: 0;
+        }
+        .dot-finance { background-color: #D97706; box-shadow: 0 0 0 3px rgba(217, 119, 6, 0.15); }
+        .dot-tech { background-color: #377FC4; box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.15); }
+        .dot-engineering { background-color: #0D9488; box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.15); }
+        .dot-bio { background-color: #16A34A; box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.15); }
+        .dot-education { background-color: #7C3AED; box-shadow: 0 0 0 3px rgba(124, 58, 237, 0.15); }
+        .dot-service, .dot-default { background-color: #64748B; box-shadow: 0 0 0 3px rgba(100, 116, 139, 0.15); }
+
+        .stats {
+            background: #F1F5F9;
+            color: #64748B;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 500;
+            white-space: nowrap;
+            margin-left: 12px;
+        }
+        .stats.full {
+            background: #FEE2E2;
+            color: #EF4444;
+        }
+        .intro-area, .form-area {
+            padding: 0 20px 16px;
+            border-top: 1px solid #F1F5F9;
+            display: none;
+        }
+        .show {
+            display: block;
+        }
+        .intro-text {
+            color: #475569;
+            line-height: 1.5;
+            margin-top: 14px;
+            font-size: 0.9rem;
+        }
+        .form-area {
+            border-top: none;
+            padding-top: 0;
+        }
+        .form-group {
+            margin-bottom: 14px;
+        }
+        label {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: #64748B;
+            display: block;
+            margin-bottom: 6px;
+        }
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            background-color: #F8FAFC;
+            transition: all 0.2s ease;
+        }
+        input:focus {
+            outline: none;
+            border-color: #377FC4;
+            background-color: #FFFFFF;
+            box-shadow: 0 0 0 3px rgba(55, 127, 196, 0.1);
+        }
+        .submit-btn {
+            background: #377FC4;
+            width: 100%;
+            border: none;
+            padding: 14px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            cursor: pointer;
+            transition: background 0.2s ease;
+        }
+        .submit-btn:hover {
+            background: #2D6AA5;
+        }
+        .submit-btn:disabled {
+            background: #E2E8F0;
+            color: #A0AEC0;
+            cursor: not-allowed;
+        }
+        .message {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            display: none;
+            font-weight: 500;
+        }
+        .success { background: #DCFCE7; color: #166534; }
+        .error { background: #FEE2E2; color: #991B1B; }
+        
+        /* 报名成功专用的现代感跳转主界面 */
+        .success-screen {
+            background: white;
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            border: 1px solid #E2E8F0;
+            margin-top: 10px;
+            display: none;
+        }
+        .success-icon {
+            width: 64px;
+            height: 64px;
+            background: #DCFCE7;
+            color: #15803D;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            margin: 0 auto 20px;
+        }
+        .success-screen h2 {
+            color: #0F172A;
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .success-screen .sub-text {
+            color: #64748B;
+            font-size: 0.9rem;
+            margin-bottom: 30px;
+        }
+        .receipt-card {
+            background: #F8FAFC;
+            border: 1px dashed #CBD5E1;
+            border-radius: 16px;
+            padding: 20px;
+            text-align: left;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+        }
+        .receipt-row:last-child {
+            margin-bottom: 0;
+            padding-top: 12px;
+            border-top: 1px solid #E2E8F0;
+        }
+        .receipt-label { color: #64748B; }
+        .receipt-value { color: #0F172A; font-weight: 600; }
+        .receipt-value.company { color: #377FC4; font-size: 1rem; }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: #94A3B8;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #64748B;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
+    <!-- 顶部状态栏 -->
     <div class="header">
         <h1>2026CBS职业探索活动</h1>
         <p>选择期望探索的行业，点击心仪企业了解详细信息并报名 · 名额有限 报满即止</p>
-        <div class="time-status" id="timeStatus">加载中...</div>
+        <div class="header-tools">
+            <div class="time-status" id="timeStatus">加载中...</div>
+            <button class="refresh-btn" onclick="manualRefresh()" id="refreshBtn">🔄 刷新名额</button>
+        </div>
     </div>
-    <div id="companyList"></div>
-    <div class="footer">每人仅限报名一次，请明确意向后填写</div>
+    
+    <!-- 主体表单与列表区 -->
+    <div id="mainContentArea">
+        <div id="companyList"></div>
+        <div class="footer">每人仅限报名一次，请明确意向后填写</div>
+    </div>
+
+    <!-- 报名成功跳转界面 -->
+    <div id="successScreen" class="success-screen">
+        <div class="success-icon">✓</div>
+        <h2>报名成功</h2>
+        <p class="sub-text">您的职业探索席位已确认，请截屏保存此凭证</p>
+        
+        <div class="receipt-card">
+            <div class="receipt-row">
+                <span class="receipt-label">学生姓名</span>
+                <span class="receipt-value" id="recName">-</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-label">行政班级</span>
+                <span class="receipt-value" id="recClass">-</span>
+            </div>
+            <div class="receipt-row">
+                <span class="receipt-label">已报企业</span>
+                <span class="receipt-value company" id="recCompany">-</span>
+            </div>
+        </div>
+    </div>
 </div>
 
 <script>
@@ -254,38 +347,49 @@
     let timeOpen = false;
     let expandedId = null;
     let submitting = false;
+    let timerInterval = null;
+    let targetStartTime = null;
 
-    // === 1. 新增：根据分类动态返回不同的极简圆点 ===
+    // 根据分类动态返回不同的极简圆点
     function getCategoryIcon(category) {
-    if (!category) return '<span class="company-dot dot-default"></span>';
-    
-    let iconClass = 'dot-default';
-    if (category.includes('金融') || category.includes('财会')) {
-        iconClass = 'dot-finance';
-    } else if (category.includes('技术') || category.includes('科技') || category.includes('科创')) {
-        iconClass = 'dot-tech';
-    } else if (category.includes('制造') || category.includes('工程') || category.includes('机械')) {
-        iconClass = 'dot-engineering';
-    } else if (category.includes('生物') || category.includes('医药')) {
-        iconClass = 'dot-bio';
-    } else if (category.includes('教育') || category.includes('人文')) { // ✨ 新增：人文教育类判断
-        iconClass = 'dot-education';
+        if (!category) return '<span class="company-dot dot-default"></span>';
+        let iconClass = 'dot-default';
+        if (category.includes('金融') || category.includes('财会')) iconClass = 'dot-finance';
+        else if (category.includes('技术') || category.includes('科技') || category.includes('科创')) iconClass = 'dot-tech';
+        else if (category.includes('制造') || category.includes('工程') || category.includes('机械')) iconClass = 'dot-engineering';
+        else if (category.includes('生物') || category.includes('医药')) iconClass = 'dot-bio';
+        else if (category.includes('教育') || category.includes('人文')) iconClass = 'dot-education';
+        return `<span class="company-dot ${iconClass}"></span>`;
     }
-    
-    return `<span class="company-dot ${iconClass}"></span>`;
-}
 
-    // === 2. 原有逻辑：获取时间状态 ===
+    // 获取并维护倒计时与时间状态
     async function fetchTimeStatus() {
         try {
             const res = await fetch(API_BASE + '/check_time');
             const data = await res.json();
             timeOpen = data.open;
+            
+            // 清除之前的定时器
+            if (timerInterval) clearInterval(timerInterval);
+
+            // 解析目标开始时间
+            targetStartTime = new Date(data.start_time.replace(/-/g, '/')); 
+            
             const statusEl = document.getElementById('timeStatus');
+
             if (data.open) {
-                statusEl.innerHTML = `✅ 报名进行中 ${data.start_time} 至 ${data.end_time}`;
+                statusEl.innerHTML = `✅ 报名进行中（截止时间：${data.end_time}）`;
             } else {
-                statusEl.innerHTML = `⛔ 报名未开始或已结束 开放时间：${data.start_time} 至 ${data.end_time}`;
+                const now = new Date();
+                if (now < targetStartTime) {
+                    // 未开始，启动精准秒级倒计时
+                    updateCountdown(statusEl, data.start_time);
+                    timerInterval = setInterval(() => {
+                        updateCountdown(statusEl, data.start_time);
+                    }, 1000);
+                } else {
+                    statusEl.innerHTML = `⛔ 报名已结束`;
+                }
             }
         } catch (err) {
             console.error(err);
@@ -293,7 +397,44 @@
         }
     }
 
-    // === 3. 原有逻辑：获取企业列表数据 ===
+    // 倒计时计算逻辑
+    function updateCountdown(element, startTimeStr) {
+        const now = new Date();
+        const diff = targetStartTime - now;
+
+        if (diff <= 0) {
+            clearInterval(timerInterval);
+            element.innerHTML = "🔄 正在刷新报名状态...";
+            init(); // 触发全页刷新
+            return;
+        }
+
+        const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        const secs = Math.floor((diff % (1000 * 60)) / 1000);
+
+        let countdownText = `⏳ 距开始还有: `;
+        if (days > 0) countdownText += `${days}天`;
+        countdownText += `${hours.toString().padStart(2, '0')}时${mins.toString().padStart(2, '0')}分${secs.toString().padStart(2, '0')}秒`;
+        
+        element.innerHTML = countdownText;
+    }
+
+    // 手动刷新名额机制
+    async function manualRefresh() {
+        const btn = document.getElementById('refreshBtn');
+        btn.disabled = true;
+        btn.innerText = '⏳ 正在刷新...';
+        await fetchTimeStatus();
+        await fetchCompanies();
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerText = '🔄 刷新名额';
+        }, 1000); // 1秒防连击保护
+    }
+
+    // 获取企业数据
     async function fetchCompanies() {
         try {
             const res = await fetch(API_BASE + '/companies');
@@ -310,7 +451,7 @@
         }
     }
 
-    // === 4. 核心渲染逻辑（已替换 🏢 图标为动态函数） ===
+    // 渲染列表
     function renderCompanies() {
         const container = document.getElementById('companyList');
         if (!companiesData.length) {
@@ -333,7 +474,6 @@
                 const statsClass = isFull ? 'stats full' : 'stats';
                 const expanded = (expandedId === comp.id);
                 
-                // 这里已经完美替换了原有的 🏢 图标
                 html += `
                     <div class="company-card ${expanded ? 'active' : ''}" data-id="${comp.id}">
                         <div class="card-header" onclick="toggleCard(${comp.id})">
@@ -365,7 +505,7 @@
         container.innerHTML = html;
     }
 
-    // === 5. 原有逻辑：折叠面板控制 ===
+    // 控制展开折叠
     window.toggleCard = function(id) {
         if (expandedId === id) {
             document.getElementById(`intro-${id}`).classList.remove('show');
@@ -388,7 +528,7 @@
         }
     };
 
-    // === 6. 原有逻辑：提交表单 ===
+    // 提交报名表单（增加成功页面跳转逻辑）
     window.submitRegistration = async function(id) {
         if (submitting) return;
         const company = companiesData.find(c => c.id === id);
@@ -424,10 +564,8 @@
             });
             const data = await res.json();
             if (data.success) {
-                showMsg(id, '报名成功！', 'success');
-                document.getElementById(`name-${id}`).value = '';
-                document.getElementById(`class-${id}`).value = '';
-                await fetchCompanies();
+                // ✨ 核心改变：不单单弹窗，而是切换显示“报名成功”凭证主界面
+                showSuccessScreen(studentName, className, company.name);
             } else {
                 showMsg(id, data.error || '报名失败', 'error');
                 if (data.error && data.error.includes('满')) {
@@ -445,16 +583,29 @@
         }
     };
 
-    // === 7. 原有逻辑：辅助工具函数 ===
+    // 跳转至成功凭证界面
+    function showSuccessScreen(name, cls, companyName) {
+        // 隐藏主列表与footer
+        document.getElementById('mainContentArea').style.display = 'none';
+        
+        // 渲染并显现成功凭证卡片
+        document.getElementById('recName').textContent = name;
+        document.getElementById('recClass').textContent = cls;
+        document.getElementById('recCompany').textContent = companyName;
+        
+        document.getElementById('successScreen').style.display = 'block';
+        
+        // 滚动到顶部方便学生截图
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     function showMsg(companyId, msg, type) {
         const msgDiv = document.getElementById(`msg-${companyId}`);
         if (!msgDiv) return;
         msgDiv.textContent = msg;
         msgDiv.className = `message ${type}`;
         msgDiv.style.display = 'block';
-        setTimeout(() => {
-            msgDiv.style.display = 'none';
-        }, 3000);
+        setTimeout(() => { msgDiv.style.display = 'none'; }, 3000);
     }
 
     function escapeHtml(str) {
@@ -473,4 +624,5 @@
     }
     init();
 </script>
+</body>
 </html>
