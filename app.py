@@ -59,7 +59,7 @@ init_db()
 
 CHINA_TZ = pytz.timezone('Asia/Shanghai')
 START_TIME = datetime(2026, 6, 3, 7, 45, 0)
-END_TIME   = datetime(2026, 6, 3, 23, 59, 59)
+END_TIME   = datetime(2026, 6, 3, 8, 59, 0)
 ADMIN_PASSWORD = os.environ.get('ADMIN_PASSWORD', 'admin5525')
 
 def is_open():
